@@ -1,0 +1,198 @@
+---
+title: "Alcohol Use, Psychological Distress, and Demographic Patterns"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+date: "2026-04-25"
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(htmlwidgets)
+library(DT)
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r data_import, include=FALSE}
+#The online file is a zip. I have attached the dataset in the samme folder. 
+load("NSDUH_2024.RData")
+ls()
+```
+
+```{r data_cleaning}
+
+nsduh_clean <- NSDUH_2024 %>%
+  select(ALCDAYS, KSSLR6MONED, INCOME, IRSEX) %>%
+  mutate(
+    INCOME = as.numeric(as.character(INCOME)),
+    IRSEX = as.numeric(as.character(IRSEX)),
+    ALCDAYS = as.numeric(as.character(ALCDAYS)),
+    KSSLR6MONED = as.numeric(as.character(KSSLR6MONED))
+  ) %>%
+  mutate(
+    ALCDAYS = ifelse(ALCDAYS > 30, NA, ALCDAYS),
+    KSSLR6MONED = ifelse(KSSLR6MONED > 24, NA, KSSLR6MONED),
+    SEX = case_when(
+      IRSEX == 1 ~ "Male",
+      IRSEX == 2 ~ "Female",
+      TRUE ~ NA_character_
+    ),
+    SEX = as.factor(SEX),
+    INCOME = case_when(
+      INCOME == 1 ~ "Less than\n$20,000",
+      INCOME == 2 ~ "$20,000 -\n$49,999",
+      INCOME == 3 ~ "$50,000 -\n$74,999",
+      INCOME == 4 ~ "$75,000\nor More",
+      TRUE ~ NA_character_
+    ),
+    INCOME = factor(
+      INCOME,
+      levels = c(
+        "Less than\n$20,000",
+        "$20,000 -\n$49,999",
+        "$50,000 -\n$74,999",
+        "$75,000\nor More"
+      )
+    )
+  ) %>%
+  drop_na(ALCDAYS, KSSLR6MONED, SEX, INCOME) %>%
+  group_by(SEX) %>%
+  mutate(
+    mean_distress = mean(KSSLR6MONED, na.rm = TRUE),
+    mean_alc_days = mean(ALCDAYS, na.rm = TRUE)
+  ) %>%
+  ungroup()
+
+```
+
+Main Analysis
+=====================================
+
+Row {data-height=40}
+-----------------------------------------------------------------------
+
+### Main Research Question
+
+**How is psychological distress associated with alcohol use, and do these patterns differ by sex and income level?**
+
+Row {data-height=500}
+-------------------------------------
+
+### Alcohol Use and Mental Health Distress
+
+```{r plot_1}
+p1 <- ggplot(
+  nsduh_clean,
+  aes(
+    x = ALCDAYS,
+    y = KSSLR6MONED,
+    color = SEX,
+    text = paste0(
+      "<b>Sex:</b> ", SEX,
+      "<br><b>Alcohol Use Days:</b> ", round(ALCDAYS, 1),
+      "<br><b>Psychological Distress Score:</b> ", round(KSSLR6MONED, 1),
+      "<br><b>Mean Alcohol Use Days by Sex:</b> ", round(mean_alc_days, 2),
+      "<br><b>Mean Distress Score by Sex:</b> ", round(mean_distress, 2)
+    )
+  )
+) +
+  geom_point(alpha = 0.35) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1.1) +
+  labs(
+    title = "Association Between Psychological Distress and Alcohol Use",
+    x = "Days of Alcohol Use in the Past 30 Days",
+    y = "Psychological Distress Score (0–24)",
+    color = "Sex"
+  ) +
+  theme_minimal(base_size = 12)
+
+renderPlotly({ggplotly(p1, tooltip = "text")})
+```
+
+
+
+### Alcohol Use by Income Level
+
+```{r plot2}
+
+income_data <- nsduh_clean %>%
+  filter(!is.na(ALCDAYS), !is.na(INCOME)) %>%
+  droplevels()
+
+anova_res <- aov(ALCDAYS ~ INCOME, data = income_data)
+
+p_val <- summary(anova_res)[[1]][["Pr(>F)"]][1]
+
+income_summary <- income_data %>%
+  group_by(INCOME) %>%
+  summarise(
+    mean_alc = mean(ALCDAYS, na.rm = TRUE),
+    sd_alc = sd(ALCDAYS, na.rm = TRUE),
+    n = n(),
+    se = sd_alc / sqrt(n),
+    ci_lower = mean_alc - (1.96 * se),
+    ci_upper = mean_alc + (1.96 * se),
+    .groups = "drop"
+  )
+
+p2 <- ggplot(
+  income_summary,
+  aes(
+    x = INCOME,
+    y = mean_alc,
+    fill = INCOME,
+    text = paste0(
+      "<b>Income Category:</b> ", INCOME,
+      "<br><b>Mean Alcohol Days:</b> ", round(mean_alc, 2),
+      "<br><b>95% CI:</b> [", round(ci_lower, 2), ", ", round(ci_upper, 2), "]",
+      "<br><b>Number of Respondents:</b> ", n,
+      "<br>---",
+      "<br><b>ANOVA p-value:</b> ", format.pval(p_val, digits = 3)
+    )
+  )
+) +
+  geom_col(alpha = 0.8) +
+  geom_errorbar(
+    aes(ymin = ci_lower, ymax = ci_upper),
+    width = 0.2,
+    color = "black"
+  ) +
+  labs(
+    title = "Average Alcohol Use Days by Household Income",
+    x = "Household Income Category",
+    y = "Mean Days of Alcohol Use (Past 30 Days)",
+    fill = NULL
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5),
+    legend.position = "none",
+    plot.margin = margin(t = 10, r = 20, b = 20, l = 20)
+  )
+
+ggplotly(p2, tooltip = "text")
+
+```
+
+Row {data-height=50}
+-------------------------------------
+
+### Quick Conclusion
+
+Alcohol use days and psychological distress vary across respondents, but the scatterplot does not show a clear separation by sex. Across income groups, average alcohol use days are relatively similar, although the highest income group shows a slightly higher mean number of alcohol use days. Overall, these visualizations suggest that income level may show clearer differences in alcohol use patterns than sex, but additional statistical testing and modeling would be needed to confirm these patterns.
+
+Dataset Description
+=====================================
+
+### Data Source
+
+
+Conclusion and Limitations
+=====================================
+
+### Key Findings
