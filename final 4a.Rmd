@@ -1,11 +1,11 @@
 ---
 title: "Alcohol Use, Psychological Distress, and Demographic Patterns (NSDUH2024)"
+author: "Yijing Sun"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: scroll
 date: "2026-04-25"
-runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -111,7 +111,7 @@ p1 <- ggplot(
   ) +
   theme_minimal(base_size = 12)
 
-renderPlotly({ggplotly(p1, tooltip = "text")})
+ggplotly(p1, tooltip = "text")
 ```
 
 
@@ -185,6 +185,15 @@ Row {data-height=70}
 ### Real-world impact and importance of dashboard
 
 This dashboard shows that alcohol use is associated with psychological distress and that differences across income levels are statistically significant (ANOVA p < 0.05). These findings can inform targeted public health strategies, though further modeling is needed to understand the direction and drivers of these differences.
+
+Row {data-height=70}
+-------------------------------------
+
+### Source codes
+
+View the full source code on GitHub:  
+https://github.com/charsun0119/DATA555_final
+
 
 Dataset Description
 =====================================
