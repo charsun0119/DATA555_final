@@ -24,5 +24,23 @@ data/NSDUH_2024 - Dataset
 
 The output will be rendered into the main folder of DATA555_final. 
 
+## Interactive Visualizations
+
+This dashboard utilizes plotly to provide dynamic insights into the NSDUH dataset.
+
+### Hover Tootips
+Hover over points or bars to view detailed information, including alcohol use days, psychological distress scores, group averages, and sample sizes.
+
+### Zoom and Pan
+Click and drag to zoom into specific regions of the scatterplot. Double-click to reset the view.
+
+### Legend Interaction (Scatterplot)
+Click on legend items (e.g., Male/Female) to show or hide specific groups for clearer comparison.
+
+### Detailed Summary Information (Bar Chart)  
+Hover over each bar to view mean alcohol use, confidence intervals, number of respondents, and the ANOVA p-value.
+
+These features allow users to explore patterns more closely and better understand relationships within the data beyond the static view.
+
 ## Real-world importance and impact
 This dashboard shows that alcohol use is associated with psychological distress and that differences across income levels are statistically significant (ANOVA p < 0.05). These findings can inform targeted public health strategies, though further modeling is needed to understand the direction and drivers of these differences.
