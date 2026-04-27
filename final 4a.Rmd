@@ -102,7 +102,6 @@ p1 <- ggplot(
   )
 ) +
   geom_point(alpha = 0.35) +
-  geom_smooth(method = "lm", se = FALSE, linewidth = 1.1) +
   labs(
     title = "Association Between Psychological Distress and Alcohol Use",
     x = "Days of Alcohol Use in the Past 30 Days",
