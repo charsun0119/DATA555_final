@@ -1,5 +1,5 @@
 ---
-title: "Alcohol Use, Psychological Distress, and Demographic Patterns"
+title: "Alcohol Use, Psychological Distress, and Demographic Patterns (NSDUH2024)"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -19,8 +19,8 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
 ```{r data_import, include=FALSE}
-#The online file is a zip. I have attached the dataset in the samme folder. 
-load("NSDUH_2024.RData")
+ 
+load("data/NSDUH_2024.RData")
 ls()
 ```
 
@@ -179,20 +179,24 @@ ggplotly(p2, tooltip = "text")
 
 ```
 
-Row {data-height=50}
+Row {data-height=70}
 -------------------------------------
 
-### Quick Conclusion
+### Real-world impact and importance of dashboard
 
-Alcohol use days and psychological distress vary across respondents, but the scatterplot does not show a clear separation by sex. Across income groups, average alcohol use days are relatively similar, although the highest income group shows a slightly higher mean number of alcohol use days. Overall, these visualizations suggest that income level may show clearer differences in alcohol use patterns than sex, but additional statistical testing and modeling would be needed to confirm these patterns.
+This dashboard shows that alcohol use is associated with psychological distress and that differences across income levels are statistically significant (ANOVA p < 0.05). These findings can inform targeted public health strategies, though further modeling is needed to understand the direction and drivers of these differences.
 
 Dataset Description
 =====================================
 
-### Data Source
+### Dataset Description
+
+The data used in this dashboard come from the publicly available Substance Abuse and Mental Health Services Administration National Survey on Drug Use and Health (NSDUH) 2024 dataset. The NSDUH is a nationally representative, cross-sectional survey of the U.S. civilian, noninstitutionalized population aged 12 and older, with approximately 70,000 respondents in 2024. Data are collected through a multistage probability sample using in-person and web-based interviews conducted at respondents’ residences. The study population includes individuals living in households and noninstitutional group quarters across the United States. Data were collected throughout the 2024 calendar year.
+link: https://www.samhsa.gov/data/data-we-collect/nsduh-national-survey-drug-use-and-health/datafiles
 
 
-Conclusion and Limitations
+Limitation
 =====================================
 
-### Key Findings
+The analysis is based on cross-sectional survey data, and so causal relationships cannot be established only based on this dataset. Additionally, the results are self-reported responses, which may be subject to bias. Moreover, only the 2024 results were involved in this dashboard, limiting the ability to assess trends over time or generalize findings beyond this specific dataset.
+
