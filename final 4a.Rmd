@@ -8,6 +8,52 @@ output:
 date: "2026-04-25"
 ---
 
+```{css, echo=FALSE}
+body {
+  font-size: 16px;
+}
+
+.chart-wrapper,
+.html-widget,
+.plotly {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1, h2, h3 {
+    font-size: 1.2em;
+  }
+
+  .row {
+    display: block;
+  }
+
+  .col-sm-6,
+  .col-md-6,
+  .col-lg-6,
+  .col-sm-4,
+  .col-md-4,
+  .col-lg-4 {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+
+  .value-box {
+    margin-bottom: 12px;
+  }
+
+  .plotly {
+    height: auto !important;
+  }
+}
+```
+
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(tidyverse)
