@@ -35,7 +35,7 @@ Hover over points or bars to view detailed information, including alcohol use da
 Click and drag to zoom into specific regions of the scatterplot. Double-click to reset the view.
 
 ### Legend Interaction (Scatterplot)
-Click on legend items (e.g., Male/Female) to show or hide specific groups for clearer comparison.
+Click on legend items (i.e. Male/Female) to show or hide specific groups for clearer comparison.
 
 ### Detailed Summary Information (Bar Chart)  
 Hover over each bar to view mean alcohol use, confidence intervals, number of respondents, and the ANOVA p-value.
