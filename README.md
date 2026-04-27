@@ -15,9 +15,9 @@ NSDUH is a nationally representative, cross-sectional survey of the U.S. civilia
 ## Directory Structure
 
 DATA555_final/
-│── final-4a.Rmd # Main dashboard file
-│── README.md # Project documentation
-│── data/ # Dataset files 
+final-4a.Rmd - Main dashboard file/source codes
+README.md
+data/NSDUH_2024 - Dataset 
 
 The output will be rendered into the main folder of DATA555_final. 
 
